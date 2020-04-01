@@ -24,7 +24,7 @@
     <div class="el-progress-circle" :style="{height: width + 'px', width: width + 'px'}" v-else>
       <svg viewBox="0 0 100 100">
         <defs>
-          <pattern id="fill-img" patternUnits="userSpaceOnUse" width="100" height="100">
+          <pattern :id="imgId" patternUnits="userSpaceOnUse" width="100" height="100">
             <image
               class="img-transform"
               :xlink:href="strokeImg"
@@ -114,6 +114,9 @@ export default {
     format: Function
   },
   computed: {
+    imgId() {
+      return this.generateImgId();
+    },
     barStyle() {
       const style = {};
       style.width = this.percentage + "%";
@@ -170,7 +173,7 @@ export default {
       if (this.color) {
         ret = this.getCurrentColor(this.percentage);
       } else if (this.strokeImg !== "") {
-        ret = "url(#fill-img)";
+        ret = "url(#" + this.imgId + ")";
       } else {
         switch (this.status) {
           case "success":
@@ -214,6 +217,15 @@ export default {
     }
   },
   methods: {
+    generateImgId() {
+      var str = Date.now().toString(36);
+      var num = Math.random()
+        .toString(36)
+        .substr(3, 5);
+      str = str + num;
+      if (document.getElementById(str) === null) return str;
+      else return this.generateImgId();
+    },
     getCurrentColor(percentage) {
       if (typeof this.color === "function") {
         return this.color(percentage);
