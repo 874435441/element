@@ -23,7 +23,7 @@
       @focus="handleFocus"
       @blur="handleBlur"
       @input="handleInput"
-      @click="() => toggleDropDownVisible(readonly ? undefined : true)"
+      @click.native="() => toggleDropDownVisible(readonly ? undefined : true)"
     >
       <template slot="suffix">
         <i
