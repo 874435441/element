@@ -140,7 +140,7 @@ import { isUndefined, isFunction } from "element-ui/src/utils/types";
 import { isDef } from "element-ui/src/utils/shared";
 import {
   addResizeListener,
-  removeResizeListener
+  removeResizeListener,
 } from "element-ui/src/utils/resize-event";
 import debounce from "throttle-debounce/debounce";
 
@@ -148,43 +148,43 @@ const { keys: KeyCode } = AriaUtils;
 const MigratingProps = {
   expandTrigger: {
     newProp: "expandTrigger",
-    type: String
+    type: String,
   },
   changeOnSelect: {
     newProp: "checkStrictly",
-    type: Boolean
+    type: Boolean,
   },
   hoverThreshold: {
     newProp: "hoverThreshold",
-    type: Number
-  }
+    type: Number,
+  },
 };
 
 const PopperMixin = {
   props: {
     placement: {
       type: String,
-      default: "bottom-start"
+      default: "bottom-start",
     },
     appendToBody: Popper.props.appendToBody,
     visibleArrow: {
       type: Boolean,
-      default: true
+      default: true,
     },
     arrowOffset: Popper.props.arrowOffset,
     offset: Popper.props.offset,
     boundariesPadding: Popper.props.boundariesPadding,
-    popperOptions: Popper.props.popperOptions
+    popperOptions: Popper.props.popperOptions,
   },
   methods: Popper.methods,
   data: Popper.data,
-  beforeDestroy: Popper.beforeDestroy
+  beforeDestroy: Popper.beforeDestroy,
 };
 
 const InputSizeMap = {
   medium: 36,
   small: 32,
-  mini: 28
+  mini: 28,
 };
 
 export default {
@@ -196,18 +196,18 @@ export default {
 
   inject: {
     elForm: {
-      default: ""
+      default: "",
     },
     elFormItem: {
-      default: ""
-    }
+      default: "",
+    },
   },
 
   components: {
     ElInput,
     ElTag,
     ElScrollbar,
-    ElCascaderPanel
+    ElCascaderPanel,
   },
 
   props: {
@@ -217,7 +217,7 @@ export default {
     size: String,
     placeholder: {
       type: String,
-      default: () => t("el.cascader.placeholder")
+      default: () => t("el.cascader.placeholder"),
     },
     disabled: Boolean,
     clearable: Boolean,
@@ -225,22 +225,22 @@ export default {
     filterMethod: Function,
     separator: {
       type: String,
-      default: " / "
+      default: " / ",
     },
     showAllLevels: {
       type: Boolean,
-      default: true
+      default: true,
     },
     collapseTags: Boolean,
     debounce: {
       type: Number,
-      default: 300
+      default: 300,
     },
     beforeFilter: {
       type: Function,
-      default: () => () => {}
+      default: () => () => {},
     },
-    popperClass: String
+    popperClass: String,
   },
 
   data() {
@@ -255,7 +255,7 @@ export default {
       filtering: false,
       suggestions: [],
       inputInitialHeight: 0,
-      pressDeleteCount: 0
+      pressDeleteCount: 0,
     };
   },
 
@@ -274,7 +274,7 @@ export default {
       const config = this.props || {};
       const { $attrs } = this;
 
-      Object.keys(MigratingProps).forEach(oldProp => {
+      Object.keys(MigratingProps).forEach((oldProp) => {
         const { newProp, type } = MigratingProps[oldProp];
         let oldValue = $attrs[oldProp] || $attrs[kebabCase(oldProp)];
         if (isDef(oldProp) && !isDef(config[newProp])) {
@@ -307,12 +307,12 @@ export default {
       }
 
       return this.multiple
-        ? !!this.checkedNodes.filter(node => !node.isDisabled).length
+        ? !!this.checkedNodes.filter((node) => !node.isDisabled).length
         : !!this.presentText;
     },
     panel() {
       return this.$refs.panel;
-    }
+    },
   },
 
   watch: {
@@ -342,10 +342,10 @@ export default {
       }
     },
     options: {
-      handler: function() {
+      handler: function () {
         this.$nextTick(this.computePresentContent);
       },
-      deep: true
+      deep: true,
     },
     presentText(val) {
       this.inputValue = val;
@@ -357,7 +357,7 @@ export default {
     },
     filtering(val) {
       this.$nextTick(this.updatePopper);
-    }
+    },
   },
 
   mounted() {
@@ -405,11 +405,12 @@ export default {
           "change-on-select":
             "change-on-select is removed, use `props.checkStrictly` instead.",
           "hover-threshold":
-            "hover-threshold is removed, use `props.hoverThreshold` instead"
+            "hover-threshold is removed, use `props.hoverThreshold` instead",
         },
         events: {
-          "active-item-change": "active-item-change is renamed to expand-change"
-        }
+          "active-item-change":
+            "active-item-change is renamed to expand-change",
+        },
       };
     },
     toggleDropDownVisible(visible) {
@@ -526,17 +527,17 @@ export default {
         leafOnly,
         showAllLevels,
         separator,
-        collapseTags
+        collapseTags,
       } = this;
       const checkedNodes = this.getCheckedNodes(leafOnly);
       const tags = [];
 
-      const genTag = node => ({
+      const genTag = (node) => ({
         node,
         key: node.uid,
         text: node.getText(showAllLevels, separator),
         hitState: false,
-        closable: !isDisabled && !node.isDisabled
+        closable: !isDisabled && !node.isDisabled,
       });
 
       if (checkedNodes.length) {
@@ -549,10 +550,10 @@ export default {
             tags.push({
               key: -1,
               text: `+ ${restCount}`,
-              closable: false
+              closable: false,
             });
           } else {
-            rest.forEach(node => tags.push(genTag(node)));
+            rest.forEach((node) => tags.push(genTag(node)));
           }
         }
       }
@@ -569,18 +570,18 @@ export default {
 
       const suggestions = this.panel
         .getFlattedNodes(this.leafOnly)
-        .filter(node => {
+        .filter((node) => {
           if (node.isDisabled) return false;
           node.text = node.getText(this.showAllLevels, this.separator) || "";
           return filterMethod(node, this.inputValue);
         });
 
       if (this.multiple) {
-        this.presentTags.forEach(tag => {
+        this.presentTags.forEach((tag) => {
           tag.hitState = false;
         });
       } else {
-        suggestions.forEach(node => {
+        suggestions.forEach((node) => {
           node.checked = isEqual(this.checkedValue, node.getValueByOption());
         });
       }
@@ -668,6 +669,9 @@ export default {
         const height = Math.max(offsetHeight + 6, inputInitialHeight) + "px";
         inputInner.style.height = height;
         this.updatePopper();
+      } else {
+        inputInner.style.height = inputInitialHeight + "px";
+        this.updatePopper();
       }
     },
 
@@ -676,8 +680,8 @@ export default {
      */
     getCheckedNodes(leafOnly) {
       return this.panel.getCheckedNodes(leafOnly);
-    }
-  }
+    },
+  },
 };
 </script>
 
